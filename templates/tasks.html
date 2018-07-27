@@ -2,12 +2,23 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
+<div class="panel-group">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			New Task
+		</div>
+		<div class="panel-body">
+			{{ wtf.quick_form(form) }}
+		</div>
+	</div>
+</div>
+
 <div class="panel-group" id="accordion">
   {% for task in tasks %}
     	{% include '_task.html' %}
     {% endfor %}
 </div>
-{{ wtf.quick_form(form) }}
+
 	
 {% endblock %}
 

@@ -27,7 +27,7 @@ def index():
 
 @app.route("/tasks", methods = ('GET', 'POST'))
 def tasks():
-	tasks = Task.query.all()
+	tasks = Task.query.order_by(Task.last_updated.desc()).all()
 	form = MyForm()
 	if form.validate_on_submit():
 		task = Task(body=form.body.data, deadline=form.deadline.data)
@@ -37,7 +37,7 @@ def tasks():
 	return render_template('tasks.html', tasks=tasks, form=form)
 
 class MyForm(FlaskForm):
-	body = StringField('New Task', validators=[DataRequired()])
+	body = StringField('Body', validators=[DataRequired()])
 	deadline = StringField('Deadline')
 	submit = SubmitField(('Submit'))
 
