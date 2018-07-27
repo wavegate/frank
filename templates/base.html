@@ -11,21 +11,17 @@
 		        <span class="mdl-color--white white icon-bar"></span>
 		        <span class="mdl-color--white icon-bar"></span>
 		    </button>
-		    <a href="{{ url_for('index') }}"><span class="navbar-brand">Welcome, Frank!</span></a>
+		    <a href="{{ url_for('index') }}"><span class="navbar-brand">{% if current_user.is_anonymous %}Squire{% else %}Welcome, {{ current_user.username }}!{% endif %}</span></a>
 		</div>
 		<div class="navbar-collapse collapse">
 		    <ul class="nav navbar-nav" style="float: right;">
-		    	<li><a href="{{ url_for('tasks') }}">Tasks</a></li>
-		        <li><a href="#">Second Item</a></li>
-		        <li><a href="#">Third Item</a></li>
-		        <li class="dropdown">
-		            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
-		                Dropdown<span class="mdi mdi-chevron-down"></span>
-		            </a>
-		            <ul class="dropdown-menu" role="menu">
-		                <li role="presentation"><a href="{{ url_for('tasks') }}">Tasks</a></li>
-		            </ul>
-		        </li>
+		    	{% if current_user.is_anonymous %}
+		        <li><a href="{{ url_for('login') }}">Login</a></li>
+		        <li><a href="{{ url_for('register') }}">Register</a></li>
+		        {% else %}
+		        <li><a href="{{ url_for('tasks') }}">Tasks</a></li>
+		        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+		        {% endif %}
 		    </ul>
 		</div>
 	</div>
@@ -34,6 +30,15 @@
 
 {% block content %}
 <div class="container">
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	<ul>
+		{% for message in messages %}
+		<li>{{ message }}</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	{% endwith %}
 	{% block app_content %}{% endblock %}
 </div>
 {% endblock %}
