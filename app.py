@@ -21,16 +21,20 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
 
-@app.route("/",  methods=('GET', 'POST'))
+@app.route("/")
 def index():
+	return render_template('index.html')
+
+@app.route("/tasks", methods = ('GET', 'POST'))
+def tasks():
 	tasks = Task.query.all()
 	form = MyForm()
 	if form.validate_on_submit():
 		task = Task(body=form.body.data)
 		db.session.add(task)
 		db.session.commit()
-		return redirect(request.referrer or url_for('index'))
-	return render_template('index.html', tasks=tasks, form=form)
+		return redirect(request.referrer or url_for('tasks'))
+	return render_template('tasks.html', tasks=tasks, form=form)
 
 class MyForm(FlaskForm):
 	body = StringField('New Task', validators=[DataRequired()])
