@@ -1,0 +1,39 @@
+{% extends 'bootstrap/base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block navbar %}
+<div class="navbar-default navbar" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+		    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		        <span class="sr-only">links toggle button</span>
+		        <span class="mdl-color--white white icon-bar"></span>
+		        <span class="mdl-color--white white icon-bar"></span>
+		        <span class="mdl-color--white icon-bar"></span>
+		    </button>
+		    <a href="{{ url_for('index') }}"><span class="navbar-brand">Welcome, Frank!</span></a>
+		</div>
+		<div class="navbar-collapse collapse">
+		    <ul class="nav navbar-nav" style="float: right;">
+		    	<li><a href="{{ url_for('tasks') }}">Tasks</a></li>
+		        <li><a href="#">Second Item</a></li>
+		        <li><a href="#">Third Item</a></li>
+		        <li class="dropdown">
+		            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
+		                Dropdown<span class="mdi mdi-chevron-down"></span>
+		            </a>
+		            <ul class="dropdown-menu" role="menu">
+		                <li role="presentation"><a href="{{ url_for('tasks') }}">Tasks</a></li>
+		            </ul>
+		        </li>
+		    </ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	{% block app_content %}{% endblock %}
+</div>
+{% endblock %}

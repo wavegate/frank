@@ -1,39 +1,12 @@
-{% extends 'bootstrap/base.html' %}
+{% extends "base.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
 
-{% block navbar %}
-<div class="navbar-default" role="navigation">
-	<div class="navbar-header">
-	    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-	        <span class="sr-only">links toggle button</span>
-	        <span class="mdl-color--white white icon-bar"></span>
-	        <span class="mdl-color--white white icon-bar"></span>
-	        <span class="mdl-color--white icon-bar"></span>
-	    </button>
-	    <a href="{{ url_for('index') }}"><span class="navbar-brand">Welcome, Frank!</span></a>
-	</div>
-	<div class="navbar-collapse collapse">
-	    <ul class="nav navbar-nav" style="float: right;">
-	        <li class="dropdown">
-	            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
-	                Dropdown<span class="mdi mdi-chevron-down"></span>
-	            </a>
-	            <ul class="dropdown-menu" role="menu">
-	                <li role="presentation"><a href="{{ url_for('tasks') }}">Tasks</a></li>
-	            </ul>
-	        </li>
-	    </ul>
-	</div>
-</div>
-{% endblock %}
+{% block app_content %}
 
-{% block content %}
-<div class="container">
-	<h4>Google Search</h4>
-	<form action="https://www.google.com/search" class="searchform" method="get" name="searchform">
-		<input autocomplete="on" autofocus class="form-control search" name="q" placeholder="Search in example.com" required="required"  type="text">
-		<button class="button" type="submit">Search</button>
-	</form>
-	{% block app_content %}{% endblock %}
-</div>
+<h4>Google Search</h4>
+<form action="https://www.google.com/search" class="searchform" method="get" name="searchform">
+	<input autocomplete="on" autofocus class="form-control search" name="q" placeholder="Search in example.com" required="required"  type="text">
+	<button class="button" type="submit">Search</button>
+</form>
+
 {% endblock %}

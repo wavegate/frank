@@ -30,7 +30,7 @@ def tasks():
 	tasks = Task.query.all()
 	form = MyForm()
 	if form.validate_on_submit():
-		task = Task(body=form.body.data)
+		task = Task(body=form.body.data, deadline=form.deadline.data)
 		db.session.add(task)
 		db.session.commit()
 		return redirect(request.referrer or url_for('tasks'))
@@ -38,6 +38,7 @@ def tasks():
 
 class MyForm(FlaskForm):
 	body = StringField('New Task', validators=[DataRequired()])
+	deadline = StringField('Deadline')
 	submit = SubmitField(('Submit'))
 
 class TaskForm(FlaskForm):
@@ -50,21 +51,24 @@ def delete_task(task_id):
     db.session.commit()
     return redirect(request.referrer or url_for('index'))
 
-@app.route('/change_task_completion', methods=['POST'])
-def change_task_completion():
-    task = Task.query.get(request.form['task_id'])
+@app.route('/change_task_completion/<int:task_id>')
+def change_task_completion(task_id):
+    task = Task.query.get(task_id)
     if task.complete:
     	task.complete = False
     else:
     	task.complete = True
+    task.last_updated = datetime.now()
     db.session.commit()
     return redirect(request.referrer or url_for('index'))
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     complete = db.Column(db.Boolean, default=False)
+    last_updated = db.Column(db.DateTime, default=datetime.now)
+    deadline = db.Column(db.String(140))
 
     def __repr__(self):
         return '<Task {}>'.format(self.body)

@@ -1,12 +1,32 @@
-<li>
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ task.id }}">
+        {{ task.body }}</a>
+        <a class="glyphicon glyphicon-{% if task.complete %}check{% else %}unchecked{% endif %} pull-right" data-toggle="tooltip" data-placement="top" title="Task complete?" href="{{ url_for('change_task_completion', task_id=task.id) }}"></a>
+        <a class="glyphicon glyphicon-remove pull-right" data-toggle="tooltip" data-placement="top" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
+      </h4>
+    </div>
+    <div id="collapse{{ task.id }}" class="panel-collapse collapse in">
+      <div class="panel-body">
+      	Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
+<br/>Last updated: {{ task.last_updated }}
+<br/>Deadline: {{ task.deadline }}
+      </div>
+    </div>
+  </div>
 
-	{{ task.body }} @ {{ task.timestamp }} 
-	<br/><a href="{{ url_for('delete_task', task_id=task.id) }}">Remove task</a>
-	<br/>Complete? <input type="checkbox" onchange="change_task_completion({{ task.id }})" {% if task.complete %} checked {% endif %}/>
+  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top" data-container="body">
+  Tooltip on top
+</button>
 
-	<script>
-		function change_task_completion(task_id) {
-			$.post( "/change_task_completion", { task_id: task_id });
-        };
-	</script>
-</li>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+	function change_task_completion(task_id) {
+		$.post( "/change_task_completion", { task_id: task_id });
+    };
+
+    $(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	})
+</script>
