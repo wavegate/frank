@@ -1,25 +1,25 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ task.id }}">
-        {{ task.body }}</a>
-        <a class="glyphicon glyphicon-{% if task.complete %}check{% else %}unchecked{% endif %} pull-right" data-toggle="tooltip" data-placement="top" title="Task complete?" href="{{ url_for('change_task_completion', task_id=task.id) }}"></a>
-        <a class="glyphicon glyphicon-remove pull-right" data-toggle="tooltip" data-placement="top" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
-      </h4>
-    </div>
-    <div id="collapse{{ task.id }}" class="panel-collapse collapse in">
-      <div class="panel-body">
-      	Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
-<br/>Last updated: {{ task.last_updated }}
-<br/>Deadline: {{ task.deadline }}
-      </div>
-    </div>
-  </div>
+<div class="panel panel-{% if task.complete %}success{% else %}default{% endif %}">
+	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ task.id }}" style="cursor: pointer">
+		{{ task.body }}
+	</div>
+	<div id="collapse{{ task.id }}" class="panel-collapse collapse">
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-6">
+					Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
+					<br/>Last updated: {{ task.last_updated }}
+					<br/>Deadline: {{ task.deadline }}
+				</div>
+				<div class="col-md-6">
+					<a class="deco-none glyphicon glyphicon-{% if task.complete %}check{% else %}unchecked{% endif %} pull-right" data-toggle="tooltip" data-placement="top" title="Task complete?" href="{{ url_for('change_task_completion', task_id=task.id) }}"></a>
+					<a class="deco-none glyphicon glyphicon-remove pull-right" data-toggle="tooltip" data-placement="top" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top" data-container="body">
-  Tooltip on top
-</button>
-
+<!-- needs adjustment, should move to a better place so don't have to repeat every task -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
 	function change_task_completion(task_id) {
@@ -30,3 +30,26 @@
 	  $('[data-toggle="tooltip"]').tooltip()
 	})
 </script>
+
+<style>
+.glyphicon {
+    font-size: 30px;
+    display: inline-block;
+    width:50px;
+    text-align: center;
+}
+.deco-none {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.deco-none:link {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.deco-none:hover {
+  color: inherit;
+  text-decoration: inherit;
+}
+</style>
