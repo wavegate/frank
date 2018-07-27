@@ -1,0 +1,12 @@
+<li>
+
+	{{ task.body }} @ {{ task.timestamp }} 
+	<br/><a href="{{ url_for('delete_task', task_id=task.id) }}">Remove task</a>
+	<br/>Complete? <input type="checkbox" onchange="change_task_completion({{ task.id }})" {% if task.complete %} checked {% endif %}/>
+
+	<script>
+		function change_task_completion(task_id) {
+			$.post( "/change_task_completion", { task_id: task_id });
+        };
+	</script>
+</li>

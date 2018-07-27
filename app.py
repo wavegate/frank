@@ -3,10 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import BooleanField, StringField, SubmitField
 from wtforms.validators import DataRequired
 import os
 from datetime import datetime
+import sys #just for console printing, can remove after
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -35,6 +36,9 @@ class MyForm(FlaskForm):
 	body = StringField('New Task', validators=[DataRequired()])
 	submit = SubmitField(('Submit'))
 
+class TaskForm(FlaskForm):
+	complete = BooleanField('Complete')
+
 @app.route('/delete_task/<int:task_id>')
 def delete_task(task_id):
     task = Task.query.get(task_id)
@@ -42,10 +46,21 @@ def delete_task(task_id):
     db.session.commit()
     return redirect(request.referrer or url_for('index'))
 
+@app.route('/change_task_completion', methods=['POST'])
+def change_task_completion():
+    task = Task.query.get(request.form['task_id'])
+    if task.complete:
+    	task.complete = False
+    else:
+    	task.complete = True
+    db.session.commit()
+    return redirect(request.referrer or url_for('index'))
+
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    complete = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Task {}>'.format(self.body)

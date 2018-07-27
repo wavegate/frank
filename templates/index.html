@@ -3,11 +3,17 @@
 
 {% block content %}
 <div class="container">
-	Tasks
+	<h1>Welcome, Frank!</h1>
+	<h4>Google Search</h4>
+	<form action="https://www.google.com/search" class="searchform" method="get" name="searchform">
+		<input autocomplete="on" autofocus class="form-control search" name="q" placeholder="Search in example.com" required="required"  type="text">
+		<button class="button" type="submit">Search</button>
+	</form>
+	<h4>Tasks</h4>
 	<ul>
 	{% for task in tasks %}
-	<li>{{ task.body }} @ {{ task.timestamp }} <a href="{{ url_for('delete_task', task_id=task.id) }}">Remove task</a></li>
-	{% endfor %}
+    	{% include '_task.html' %}
+    {% endfor %}
 	</ul>
 	{{ wtf.quick_form(form) }}
 </form>
