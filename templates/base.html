@@ -42,3 +42,13 @@
 	{% block app_content %}{% endblock %}
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+	$(function(){ 
+		$('form').attr('autocomplete','off');
+		$('[data-toggle="tooltip"]').tooltip();
+	});
+</script>
+{{super()}}
+{% endblock %}

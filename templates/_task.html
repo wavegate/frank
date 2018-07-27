@@ -7,10 +7,11 @@
 			<div class="row">
 				<div class="col-md-6">
 					Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
-					<br/>Last updated: {{ task.last_updated }}
-					<br/>Deadline: {{ task.deadline }}
+					<br/>Last updated: {{ task.last_updated.strftime("%A, %B %d, %Y at %I:%M%p") }}
+					<br/>Deadline: {{ task.deadline.strftime("%A, %B %d, %Y at %I:%M%p") }}
 				</div>
 				<div class="col-md-6">
+					<a class="deco-none glyphicon glyphicon-edit pull-right" data-toggle="tooltip" data-placement="top" title="Edit task" href="{{ url_for('edit_task', task_id=task.id) }}"></a>
 					<a class="deco-none glyphicon glyphicon-{% if task.complete %}check{% else %}unchecked{% endif %} pull-right" data-toggle="tooltip" data-placement="top" title="Task complete?" href="{{ url_for('change_task_completion', task_id=task.id) }}"></a>
 					<a class="deco-none glyphicon glyphicon-remove pull-right" data-toggle="tooltip" data-placement="top" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
 				</div>
@@ -21,14 +22,10 @@
 
 <!-- needs adjustment, should move to a better place so don't have to repeat every task -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript">
+<script>
 	function change_task_completion(task_id) {
 		$.post( "/change_task_completion", { task_id: task_id });
     };
-
-    $(function () {
-	  $('[data-toggle="tooltip"]').tooltip()
-	})
 </script>
 
 <style>

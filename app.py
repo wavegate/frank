@@ -4,10 +4,12 @@ from flask_login import current_user, LoginManager, login_required, login_user, 
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.urls import url_parse
-from wtforms import BooleanField, PasswordField, StringField, SubmitField
+from wtforms import BooleanField, DateTimeField, PasswordField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms.fields.html5 import DateField
 
 import os
 from datetime import datetime
@@ -25,6 +27,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
 login = LoginManager(app)
+csrf = CSRFProtect(app)
 login.login_view = 'login'
 
 @login.user_loader
@@ -108,9 +111,9 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Please use a different email address.')
 
 class MyForm(FlaskForm):
-	body = StringField('Body', validators=[DataRequired()])
-	deadline = StringField('Deadline')
-	submit = SubmitField(('Submit'))
+	body = TextAreaField('Body', validators=[DataRequired()])
+	deadline = DateField('Deadline', format='%Y-%m-%d')
+	submit = SubmitField('Submit')
 
 class TaskForm(FlaskForm):
 	complete = BooleanField('Complete')
@@ -122,6 +125,18 @@ def delete_task(task_id):
         db.session.delete(task)
         db.session.commit()
     return redirect(request.referrer or url_for('index'))
+
+@app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
+def edit_task(task_id):
+    task = Task.query.get(task_id)
+    form = MyForm()
+    if form.validate_on_submit() and current_user == task.author:
+        task.body=form.body.data
+        task.deadline=form.deadline.data
+        task.last_updated=datetime.now()
+        db.session.commit()
+        return redirect(url_for('tasks'))
+    return render_template('edit_task.html', task=task, form=form)
 
 @app.route('/change_task_completion/<int:task_id>')
 def change_task_completion(task_id):
@@ -154,7 +169,7 @@ class Task(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     complete = db.Column(db.Boolean, default=False)
     last_updated = db.Column(db.DateTime, default=datetime.now)
-    deadline = db.Column(db.String(140))
+    deadline = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
