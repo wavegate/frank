@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: a37601a73d0c
+Revision ID: 151301173c4b
 Revises: 
-Create Date: 2018-07-27 15:15:53.607945
+Create Date: 2018-07-27 20:25:26.066213
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a37601a73d0c'
+revision = '151301173c4b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,12 +29,16 @@ def upgrade():
     op.create_index(op.f('ix_user_username'), 'user', ['username'], unique=True)
     op.create_table('task',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('body', sa.String(length=140), nullable=True),
+    sa.Column('title', sa.String(length=140), nullable=True),
+    sa.Column('notes', sa.String(length=5000), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.Column('complete', sa.Boolean(), nullable=True),
     sa.Column('last_updated', sa.DateTime(), nullable=True),
     sa.Column('deadline', sa.DateTime(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('start_time', sa.DateTime(), nullable=True),
+    sa.Column('end_time', sa.DateTime(), nullable=True),
+    sa.Column('isEvent', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

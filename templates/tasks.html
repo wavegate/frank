@@ -7,8 +7,47 @@
 		<div class="panel-heading">
 			New Task
 		</div>
-		<div class="panel-body">
-			{{ wtf.quick_form(form) }}
+		<div class="panel-body" style="position:relative">
+			<form method="POST" action="/create_task">
+				{{ form.hidden_tag() }}
+				<div class="form-group row">
+					{{ form.title.label(class_="col-sm-2 col-form-label")}}
+					<div class="col-sm-10">
+						{{ form.title(class_="form-control") }}
+					</div>
+				</div>
+				<div class="form-group row">
+					{{ form.notes.label(class_="col-sm-2 col-form-label")}}
+					<div class="col-sm-4">
+						{{ form.notes(class_="form-control") }}
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group row">
+							{{ form.deadline.label(class_="col-sm-2 col-form-label")}}
+							<div class="col-sm-4">
+								{{ form.deadline(class_="form-control datepick") }}
+							</div>
+						</div>
+						<div class="form-group row">
+							{{ form.start_time.label(class_="col-sm-2 col-form-label")}}
+							<div class="col-sm-10">
+								{{ form.start_time(class_="form-control datepick") }}
+							</div>
+						</div>
+						<div class="form-group row">
+							{{ form.end_time.label(class_="col-sm-2 col-form-label")}}
+							<div class="col-sm-10">
+								{{ form.end_time(class_="form-control datepick") }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-sm-10">
+			    	<input type="submit" class="btn btn-primary"></input>
+			    </div>
+			    </div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -18,14 +57,5 @@
     	{% include '_task.html' %}
     {% endfor %}
 </div>
-
 	
 {% endblock %}
-
-<!--implement, currently not working -->
-<script>
-	$(document).ready(function(){ 
-		alert('asdf');
-		$('form').attr('autocomplete','nope');
-	}
-</script>

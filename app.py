@@ -5,11 +5,13 @@ from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
+from flask_moment import Moment
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.urls import url_parse
 from wtforms import BooleanField, DateTimeField, PasswordField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Optional, ValidationError
-from wtforms.fields.html5 import DateField
+#from wtforms.fields.html5 import DateField
+from wtforms.fields import DateField
 
 import os
 from datetime import datetime
@@ -28,6 +30,7 @@ migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
 login = LoginManager(app)
 csrf = CSRFProtect(app)
+moment = Moment(app)
 login.login_view = 'login'
 
 @login.user_loader
@@ -38,17 +41,37 @@ def load_user(user_id):
 def index():
 	return redirect(url_for('tasks'))
 
-@app.route("/tasks", methods = ('GET', 'POST'))
+@app.route("/tasks", methods=['GET', 'POST'])
 @login_required
 def tasks():
 	tasks = current_user.tasks.order_by(Task.last_updated.desc()).all()
-	form = MyForm()
-	if form.validate_on_submit():
-		task = Task(body=form.body.data, deadline=form.deadline.data, author=current_user)
-		db.session.add(task)
-		db.session.commit()
-		return redirect(request.referrer or url_for('tasks'))
+	form = TaskForm()
 	return render_template('tasks.html', tasks=tasks, form=form)
+
+@app.route("/create_task", methods=['POST'])
+@login_required
+def create_task():
+    form = TaskForm()
+    if form.validate_on_submit():
+        task = Task(title=form.title.data, notes = form.notes.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user)
+        db.session.add(task)
+        db.session.commit()
+    return redirect(request.referrer or url_for('tasks'))
+
+@app.route("/fitness", methods=['GET'])
+@login_required
+def fitness():
+    return render_template('fitness.html')
+
+@app.route("/schedule", methods=['GET'])
+@login_required
+def schedule():
+    return render_template('schedule.html')
+
+@app.route("/profile", methods=['GET'])
+@login_required
+def profile():
+    return render_template('profile.html')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -110,13 +133,13 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
-class MyForm(FlaskForm):
-	body = TextAreaField('Body', validators=[DataRequired()])
-	deadline = DateField('Deadline', format='%Y-%m-%d', validators=[Optional()])
-	submit = SubmitField('Submit')
-
 class TaskForm(FlaskForm):
-	complete = BooleanField('Complete')
+    title = StringField('Title', validators=[DataRequired()])
+    notes = TextAreaField('Notes')
+    deadline = DateTimeField('Deadline', format="%m/%d/%Y %I:%M %p", validators=[Optional()])
+    start_time = DateTimeField('Start Time', format="%m/%d/%Y %I:%M %p", validators=[Optional()])
+    end_time = DateTimeField('End Time', format="%m/%d/%Y %I:%M %p", validators=[Optional()])
+    submit = SubmitField('Submit')
 
 @app.route('/delete_task/<int:task_id>')
 def delete_task(task_id):
@@ -129,10 +152,13 @@ def delete_task(task_id):
 @app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
 def edit_task(task_id):
     task = Task.query.get(task_id)
-    form = MyForm()
+    form = TaskForm()
     if form.validate_on_submit() and current_user == task.author:
-        task.body=form.body.data
+        task.title=form.title.data
+        task.notes=form.notes.data
         task.deadline=form.deadline.data
+        task.start_time=form.start_time.data
+        task.end_time=form.end_time.data
         task.last_updated=datetime.now()
         db.session.commit()
         return redirect(url_for('tasks'))
@@ -165,15 +191,19 @@ class User(UserMixin, db.Model):
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(140))
+    title = db.Column(db.String(140))
+    notes = db.Column(db.String(5000))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     complete = db.Column(db.Boolean, default=False)
     last_updated = db.Column(db.DateTime, default=datetime.now)
     deadline = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
+    isEvent = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return '<Task {}>'.format(self.body)
+        return '<Task {}>'.format(self.title)
 
 @app.shell_context_processor
 def make_shell_context():

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+
+{{ current_user.username }}
+{{ current_user.email }}
+{{ current_user.id }}
+{{ current_user.password_hash }}
+height
+weight
+
+{% endblock %}
+
