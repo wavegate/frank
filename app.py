@@ -8,7 +8,7 @@ from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.urls import url_parse
 from wtforms import BooleanField, DateTimeField, PasswordField, StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, Optional, ValidationError
 from wtforms.fields.html5 import DateField
 
 import os
@@ -112,7 +112,7 @@ class RegistrationForm(FlaskForm):
 
 class MyForm(FlaskForm):
 	body = TextAreaField('Body', validators=[DataRequired()])
-	deadline = DateField('Deadline', format='%Y-%m-%d')
+	deadline = DateField('Deadline', format='%Y-%m-%d', validators=[Optional()])
 	submit = SubmitField('Submit')
 
 class TaskForm(FlaskForm):
