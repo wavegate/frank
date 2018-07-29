@@ -37,7 +37,10 @@ def load_user(user_id):
 
 @app.route("/")
 def index():
-	return redirect(url_for('tasks'))
+    if current_user.is_authenticated:
+        return redirect(url_for('tasks'))
+    else:
+        return redirect(url_for('login'))
 
 @app.route("/tasks", methods=['GET', 'POST'])
 @login_required
@@ -57,7 +60,6 @@ def create_task():
     return redirect(request.referrer or url_for('tasks'))
 
 @app.route("/fitness", methods=['GET'])
-@login_required
 def fitness():
     return render_template('fitness.html')
 

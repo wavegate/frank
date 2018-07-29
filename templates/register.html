@@ -4,17 +4,12 @@
 	{{ super() }}
 	<link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet"/>
     <style>
-body {
-    background-image: url({{ url_for('static', filename='img/background.jpg') }});
+    body {
+        background-image: url({{ url_for('static', filename='img/background.jpg') }});
 }
 </style>
 {% endblock %}
 
-<style>
-body {
-    background-image: url({{ url_for('static', filename='img/background.jpg') }});
-}
-</style>
 
 {% block app_content %}
 <div class="card card-container">
