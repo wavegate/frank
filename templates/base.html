@@ -10,57 +10,56 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 	<link href="{{ url_for('static', filename='css/base_navbar.css') }}" rel="stylesheet"/>
+	<link href="{{ url_for('static', filename='css/alert.css') }}" rel="stylesheet"/>
+	<link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet"/>
 	{% endblock %}
 </head>
 
 <body>
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<div class="page-alerts">
+			{% for message in messages %}
+		    <div class="alert alert-info page-alert">
+		        <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		        <strong>Alert:</strong> {{ message }}
+		    </div>
+		    {% endfor %}
+		</div>
+		{% endif %}
+	{% endwith %}
 	<div id="wrapper" class="animate">
 		{% block navbar %}
 		<nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-dark ">
-			<a class="navbar-brand" href="{{ url_for('index') }}">{% if current_user.is_anonymous %}Squire{% else %}Welcome, {{ current_user.username }}!{% endif %}</a>
+			<a class="navbar-brand" href="{{ url_for('index') }}">{% if current_user.is_anonymous %}<img class="logo" src="{{ url_for('static', filename='img/logo_invert.png')}}"/>{% else %}Welcome, {{ current_user.username }}!{% endif %}</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
 			aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarText">
-			<ul class="navbar-nav ml-md-auto d-md-flex">
-				{% if current_user.is_anonymous %}
-				<li class="nav-item">
-					<a class="nav-link" href="{{ url_for('login') }}">Login</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ url_for('register') }}">Register</a>
-				</li>
-				{% else %}
-				<li class="nav-item">
-					<a class="nav-link" href="{{ url_for('tasks') }}">Tasks</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-				</li>
-				{% endif %}
-			</ul>
-		</div>
-	</nav>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav ml-md-auto d-md-flex">
+					{% if current_user.is_anonymous %}
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('login') }}">Login</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('register') }}">Register</a>
+					</li>
+					{% else %}
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('tasks') }}">Tasks</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+					</li>
+					{% endif %}
+				</ul>
+			</div>
+		</nav>
 	{% endblock %}
 
 	{% block content %}
 	<div class="container-fluid">
-		{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<div class="row">
-			<div class="col">
-				<div class="card">
-					<ul>
-						{% for message in messages %}
-						<li>{{ message }}</li>
-						{% endfor %}
-					</ul>
-				</div>
-			</div>
-		</div>
-		{% endif %}
-		{% endwith %}
 		{% block app_content %}{% endblock %}
 	</div>
 	{% endblock %}
@@ -69,7 +68,10 @@
 
 {% block scripts %}
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <!--
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
@@ -78,13 +80,15 @@
 	{{ moment.include_moment() }}
 	<script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.js')}}"></script>
 	<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/alert.js') }}"></script>
 	<script>
 		$(function(){ 
 			$('form').attr('autocomplete','off');
 			$('[data-toggle="tooltip"]').tooltip();
 			$('.datepick').datetimepicker();
 			moment().format();
-		});
+			$('.page-alert').slideDown();
+			});
 	</script>
 
 	<script>

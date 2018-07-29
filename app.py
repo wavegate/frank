@@ -53,6 +53,7 @@ def tasks():
         task = Task(title=form.title.data, notes = form.notes.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user)
         db.session.add(task)
         db.session.commit()
+        flash('Task created.')
         return redirect(url_for('tasks'))
     return render_template('tasks.html', tasks=tasks, form=form, action="Create")
 
@@ -74,6 +75,7 @@ def edit_task(task_id):
             task.end_time=form.end_time.data
         task.last_updated=datetime.utcnow()
         db.session.commit()
+        flash('Task updated.')
         return redirect(url_for('tasks'))
     return render_template('tasks.html', tasks=tasks, task=task, form=form, action="Edit")
 
