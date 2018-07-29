@@ -1,15 +1,29 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block head %}
+	{{ super() }}
+	<link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet"/>
+{% endblock %}
 
 {% block app_content %}
-<div class="panel-group">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			Sign In
-		</div>
-		<div class="panel-body">
-			{{ wtf.quick_form(form) }}
-		</div>
-	</div>
-</div>
+<div class="card card-container">
+            <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
+            <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+            <p id="profile-name" class="profile-name-card"></p>
+            <form class="form-signin" method="POST" action="/login">
+                <span id="reauth-email" class="reauth-email"></span>
+                {{ form.hidden_tag() }}
+                {{ form.username(class_="form-control", placeholder="Username")}}
+                {{ form.password(class_="form-control", placeholder="Password")}}
+                <div id="remember" class="checkbox">
+                    <label>
+                        {{ form.remember_me }} Remember me
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+            </form><!-- /form -->
+            <a href="#" class="forgot-password">
+                Forgot the password? (not implemented yet)
+            </a>
+        </div><!-- /card-container -->
 {% endblock %}

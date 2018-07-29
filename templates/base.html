@@ -1,68 +1,112 @@
-{% extends 'bootstrap/base.html' %}
-{% import 'bootstrap/wtf.html' as wtf %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block navbar %}
-<div class="navbar-default navbar" role="navigation">
-	<div class="container">
-		<div class="navbar-header">
-		    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-		        <span class="sr-only">links toggle button</span>
-		        <span class="mdl-color--white white icon-bar"></span>
-		        <span class="mdl-color--white white icon-bar"></span>
-		        <span class="mdl-color--white icon-bar"></span>
-		    </button>
-		    <a href="{{ url_for('index') }}"><span class="navbar-brand">{% if current_user.is_anonymous %}Squire{% else %}Welcome, {{ current_user.username }}!{% endif %}</span></a>
+<head>
+	{% block head %}
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+	<link href="{{ url_for('static', filename='css/base_navbar.css') }}" rel="stylesheet"/>
+	{% endblock %}
+</head>
+
+<body>
+	<div id="wrapper" class="animate">
+		{% block navbar %}
+		<nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-dark ">
+			<span class="navbar-toggler-icon leftmenutrigger"></span>
+			<a class="navbar-brand" href="{{ url_for('index') }}">{% if current_user.is_anonymous %}Squire{% else %}Welcome, {{ current_user.username }}!{% endif %}</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarText">
+			<ul class="navbar-nav animate side-nav">
+				{% if current_user.is_anonymous %}
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('login') }}">Login</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('register') }}">Register</a>
+				</li>
+				{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('tasks') }}">Tasks</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+				</li>
+				{% endif %}
+			</ul>
+			<ul class="navbar-nav ml-md-auto d-md-flex">
+				{% if current_user.is_anonymous %}
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('login') }}">Login</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('register') }}">Register</a>
+				</li>
+				{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('tasks') }}">Tasks</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+				</li>
+				{% endif %}
+			</ul>
 		</div>
-		<div class="navbar-collapse collapse">
-		    <ul class="nav navbar-nav" style="float: right;">
-		    	{% if current_user.is_anonymous %}
-		        <li><a href="{{ url_for('login') }}">Login</a></li>
-		        <li><a href="{{ url_for('register') }}">Register</a></li>
-		        {% else %}
-		        <li><a href="{{ url_for('tasks') }}">Tasks</a></li>
-		        <li><a href="{{ url_for('logout') }}">Logout</a></li>
-		        {% endif %}
-		    </ul>
+	</nav>
+	{% endblock %}
+
+	{% block content %}
+	<div class="container-fluid">
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<div class="row">
+			<div class="col">
+				<div class="card">
+					<ul>
+						{% for message in messages %}
+						<li>{{ message }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
 		</div>
+		{% endif %}
+		{% endwith %}
+		{% block app_content %}{% endblock %}
 	</div>
+	{% endblock %}
 </div>
-{% endblock %}
-
-{% block content %}
-<div class="container">
-	{% with messages = get_flashed_messages() %}
-	{% if messages %}
-	<ul>
-		{% for message in messages %}
-		<li>{{ message }}</li>
-		{% endfor %}
-	</ul>
-	{% endif %}
-	{% endwith %}
-	{% block app_content %}{% endblock %}
-</div>
-{% endblock %}
+</body>
 
 {% block scripts %}
-{{ super() }}
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!--
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+	<script>
+		$(function(){ 
+			$('form').attr('autocomplete','off');
+			$('[data-toggle="tooltip"]').tooltip();
+			$('.datepick').datetimepicker();
+			$('.leftmenutrigger').on('click', function(e) {
+				$('.side-nav').toggleClass("open");
+				e.preventDefault();
+			});
+		});
+	</script>
 
-<script>
-	$(function(){ 
-		$('form').attr('autocomplete','off');
-		$('[data-toggle="tooltip"]').tooltip();
-		$('.datepick').datetimepicker();
-	});
-</script>
-
-<style>
+	<style>
 	
 </style>
 {% endblock %}
+</html>

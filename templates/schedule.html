@@ -1,8 +1,14 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-Your tasks that are labeled as 'Events' are displayed here.
+
+<p>Tasks that include a start time and end time are displayed in Schedule.</p>
+
+{% for task in tasks %}
+		{% if task.start_time and task.end_time %}
+		{% include '_schedule.html' %}
+		{% endif %}
+{% endfor %}
 
 {% endblock %}
 

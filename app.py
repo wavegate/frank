@@ -2,7 +2,6 @@ from flask import flash, Flask, render_template, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, LoginManager, login_required, login_user, logout_user, UserMixin
 from flask_migrate import Migrate
-from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
 from flask_moment import Moment
@@ -27,7 +26,6 @@ app.debug = True
 app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-bootstrap = Bootstrap(app)
 login = LoginManager(app)
 csrf = CSRFProtect(app)
 moment = Moment(app)
@@ -66,7 +64,8 @@ def fitness():
 @app.route("/schedule", methods=['GET'])
 @login_required
 def schedule():
-    return render_template('schedule.html')
+    tasks = current_user.tasks.order_by(Task.start_time.desc()).all()
+    return render_template('schedule.html', tasks=tasks)
 
 @app.route("/profile", methods=['GET'])
 @login_required

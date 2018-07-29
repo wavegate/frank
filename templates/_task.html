@@ -1,51 +1,51 @@
-<div class="panel panel-{% if task.complete %}success{% else %}default{% endif %}">
-	<div class="panel-heading" data-toggle="collapse" data-target="#collapse{{ task.id }}" style="cursor: pointer">
+<div class="card-header" id="heading{{task.id}}" data-toggle="collapse" data-target="#collapse{{ task.id }}" style="cursor: pointer" aria-expanded="true" aria-controls="collapse{{task.id}}">
+	<h5 class="mb-0">
 		{{ task.title }}
-	</div>
-	<div id="collapse{{ task.id }}" class="collapse">
-		<div class="panel-body">
-			<div class="row">
-				<div class="col-md-4">
-					Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
-					<br/>Last updated: {{ task.last_updated.strftime("%A, %B %d, %Y at %I:%M%p") }}
-					{% if task.deadline %}<br/>Deadline: {{ task.deadline.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}
-					{% if task.start_time %}<br/>Starts: {{ task.start_time.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}
-					{% if task.end_time %}<br/>Ends: {{ task.end_time.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}
+	</h5>
+</div>
+<div id="collapse{{ task.id }}" class="collapse" aria-labelledby="heading{{task.id}}" data-parent="#accordion">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-md-4">
+				Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
+				<br/>Last updated: {{ task.last_updated.strftime("%A, %B %d, %Y at %I:%M%p") }}
+				{% if task.deadline %}<br/>Deadline: {{ task.deadline.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}
+				{% if task.start_time %}<br/>Starts: {{ task.start_time.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}
+				{% if task.end_time %}<br/>Ends: {{ task.end_time.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}
+			</div>
+			<div class="col-md-6">
+				<div class="card card-body"><!-- why no work? -->
+					{% if task.notes %}<p>{{ task.notes }}</p>{% else %}No notes{% endif %}
 				</div>
-				<div class="col-md-6">
-					<div class="card card-body"><!-- why no work? -->
-						{% if task.notes %}<p>{{ task.notes }}</p>{% endif %}
-					</div>
-				</div>
-				<div class="col-md-2">
-					<a class="deco-none glyphicon glyphicon-edit pull-right" data-toggle="tooltip" data-placement="top" title="Edit task" href="{{ url_for('edit_task', task_id=task.id) }}"></a>
-					<a class="deco-none glyphicon glyphicon-{% if task.complete %}check{% else %}unchecked{% endif %} pull-right" data-toggle="tooltip" data-placement="top" title="Task complete?" href="{{ url_for('change_task_completion', task_id=task.id) }}"></a>
-					<a class="deco-none glyphicon glyphicon-remove pull-right" data-toggle="tooltip" data-placement="top" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
-				</div>
+			</div>
+			<div class="col-md-2">
+				<a class="deco-none fas fa-edit pull-right" data-toggle="tooltip" data-placement="top" title="Edit task" href="{{ url_for('edit_task', task_id=task.id) }}"></a>
+				<a class="deco-none fas fa-{% if task.complete %}check-square{% else %}square{% endif %} pull-right" data-toggle="tooltip" data-placement="top" title="Task complete?" href="{{ url_for('change_task_completion', task_id=task.id) }}"></a>
+				<a class="deco-none fas fa-trash-alt pull-right" data-toggle="tooltip" data-placement="top" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
 			</div>
 		</div>
 	</div>
 </div>
 
 <style>
-.glyphicon {
-    font-size: 30px;
-    display: inline-block;
-    width:50px;
-    text-align: center;
+.fas {
+	font-size: 30px;
+	display: inline-block;
+	width:50px;
+	text-align: center;
 }
 .deco-none {
-  color: inherit;
-  text-decoration: inherit;
+	color: inherit;
+	text-decoration: inherit;
 }
 
 .deco-none:link {
-  color: inherit;
-  text-decoration: inherit;
+	color: inherit;
+	text-decoration: inherit;
 }
 
 .deco-none:hover {
-  color: inherit;
-  text-decoration: inherit;
+	color: inherit;
+	text-decoration: inherit;
 }
 </style>
