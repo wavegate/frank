@@ -47,7 +47,8 @@ def index():
 @app.route("/tasks", methods=['GET', 'POST'])
 @login_required
 def tasks():
-    tasks = current_user.tasks.order_by(Task.last_updated.desc()).all()
+    tasks = current_user.tasks.filter(Task.stashed != True).order_by(Task.last_updated.desc()).all()
+    stashed_tasks = current_user.tasks.filter_by(stashed=True).order_by(Task.last_updated.desc()).all()
     form = TaskForm()
     if form.validate_on_submit():
         task = Task(title=form.title.data, notes = form.notes.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user, last_updated=datetime.utcnow())
@@ -55,7 +56,7 @@ def tasks():
         db.session.commit()
         flash('Task created.')
         return redirect(url_for('tasks'))
-    return render_template('tasks.html', tasks=tasks, form=form, action="Create")
+    return render_template('tasks.html', tasks=tasks, stashed_tasks=stashed_tasks, form=form, action="Create")
 
 @app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
 def edit_task(task_id):
@@ -89,9 +90,26 @@ def delete_completed_tasks():
     flash('All completed tasks have been deleted.')
     return redirect(request.referrer or url_for('tasks'))
 
+@app.route('/stash_task/<int:task_id>')
+def stash_task(task_id):
+    task = Task.query.get(task_id)
+    if current_user == task.author:
+        if task.stashed == True:
+            task.stashed = False
+            flash('Task unstashed.')
+        elif task.stashed == False:
+            task.stashed = True
+            flash('Task stashed.')
+        db.session.commit()
+    return redirect(request.referrer or url_for('tasks'))
+
 @app.route("/fitness", methods=['GET'])
 def fitness():
     return render_template('fitness.html')
+
+@app.route("/settings")
+def settings():
+    return render_template('settings.html')
 
 @app.route("/schedule", methods=['GET'])
 @login_required
@@ -179,8 +197,19 @@ def delete_task(task_id):
     task = Task.query.get(task_id)
     if current_user == task.author:
         db.session.delete(task)
+        if current_user.current_task_id == task.id:
+            current_user.current_task_id = None
         db.session.commit()
         flash('Task deleted.')
+    return redirect(request.referrer or url_for('index'))
+
+@app.route('/set_as_current_task/<int:task_id>')
+def set_as_current_task(task_id):
+    task = Task.query.get(task_id)
+    if current_user == task.author:
+        current_user.current_task_id = task_id
+        db.session.commit()
+        flash('Task marked as current.')
     return redirect(request.referrer or url_for('index'))
 
 @app.route('/change_task_completion/<int:task_id>')
@@ -203,6 +232,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     tasks = db.relationship('Task', backref='author', lazy='dynamic')
+    current_task_id = db.Column(db.Integer)
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
     def check_password(self, password):
@@ -222,6 +252,7 @@ class Task(db.Model):
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
     isEvent = db.Column(db.Boolean, default=False)
+    stashed = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Task {}>'.format(self.title)

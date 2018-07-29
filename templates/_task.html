@@ -1,4 +1,4 @@
-<div class="card-header{% if task.complete %} bg-success text-white{% endif %}" id="heading{{task.id}}" data-toggle="collapse" data-target="#collapse{{ task.id }}" style="cursor: pointer" aria-expanded="true" aria-controls="collapse{{task.id}}">
+<div class="card-header{% if task.complete %} bg-success text-white{% elif current_user.current_task_id == task.id %} bg-primary text-white{% endif %}" id="heading{{task.id}}" data-toggle="collapse" data-target="#collapse{{ task.id }}" style="cursor: pointer" aria-expanded="true" aria-controls="collapse{{task.id}}">
 	<h5 class="mb-0">
 		{{ task.title }}
 		{% if task.deadline %}
@@ -28,32 +28,10 @@
 			<div class="col-md-2">
 				<a class="deco-none fas fa-edit float-right" data-toggle="tooltip" data-placement="top" title="Edit task" href="{{ url_for('edit_task', task_id=task.id) }}"></a>
 				<a class="deco-none fas fa-{% if task.complete %}check-square{% else %}square{% endif %} float-right" data-toggle="tooltip" data-placement="top" title="Task complete?" href="{{ url_for('change_task_completion', task_id=task.id) }}"></a>
-				<a class="deco-none fas fa-trash-alt float-right" data-toggle="tooltip" data-placement="top" title="Delete task" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
+				<a class="deco-none fas fa-trash-alt float-right" data-toggle="tooltip" data-placement="top" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
+				<a class="deco-none fab fa-jedi-order float-right" data-toggle="tooltip" data-placement="top" title="Set as current" href="{{ url_for('set_as_current_task', task_id=task.id) }}"></a>
+				<a class="deco-none fas fa-folder-open float-right" data-toggle="tooltip" data-placement="top" title="Stash" href="{{ url_for('stash_task', task_id=task.id) }}"></a>
 			</div>
 		</div>
 	</div>
 </div>
-
-<style>
-.fas {
-	font-size: 30px;
-	display: inline-block;
-	width:50px;
-	text-align: center;
-}
-.deco-none {
-	color: inherit;
-	text-decoration: inherit;
-}
-
-.deco-none:link {
-	color: inherit;
-	text-decoration: inherit;
-}
-
-.deco-none:hover {
-	color: inherit;
-	text-decoration: inherit;
-}
-
-</style>

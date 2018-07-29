@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+
+{% block app_content %}
+<div class="row">
+	<div class="col">
+		<div class="card">
+			<div class="card-body">
+				<a class="btn btn-primary" href="{{ url_for('delete_completed_tasks') }}">Delete completed tasks</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
