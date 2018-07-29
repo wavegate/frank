@@ -59,12 +59,12 @@
 						<div class="col-sm-2">
 					    	<input type="submit" class="btn btn-primary btn-block"></input>
 				    		<input class="btn btn-link btn-block" data-toggle="collapse" data-target="#collapseTaskForm" value="Details"></input>
-				    		{% if action=='Edit' %}
-				    		<button class="btn btn-link btn-block" href="{{ url_for('tasks') }}">Cancel</button>
-				    		{% endif %}
 				    	</div>
 				    </div>
 					</form>
+					{% if action=='Edit' %}
+			    		<a class="btn btn-link btn-block" href="{{ url_for('tasks') }}">Cancel</a>
+		    		{% endif %}
 				</div>
 			</div>
 		</div>
@@ -77,6 +77,15 @@
 	  	{% for task in tasks %}
 	    	{% include '_task.html' %}
 	    {% endfor %}
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<div class="card">
+			<div class="card-body">
+				<a class="btn btn-primary" href="{{ url_for('delete_completed_tasks') }}">Delete completed tasks</a>
+			</div>
 		</div>
 	</div>
 </div>

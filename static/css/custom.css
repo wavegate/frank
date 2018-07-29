@@ -1,5 +1,6 @@
 body {
 	padding-top: 55px; 
+	word-wrap:break-word;
 }
 
 .logo {
@@ -9,4 +10,10 @@ body {
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50%;
+}
+
+.container-fluid {
+  overflow: hidden;
+  text-overflow: clip; // The default, it just disappears
+  text-overflow: ellipsis; // Or, you can make an ellipsis (...) appear where the text is cut off
 }

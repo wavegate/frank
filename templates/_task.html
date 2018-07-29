@@ -2,7 +2,7 @@
 	<h5 class="mb-0">
 		{{ task.title }}
 		{% if task.deadline %}
-		<div class="float-right">
+		<div class="float-sm-right">
 			Due {{ moment(task.deadline, local=True).fromNow()}}
 		</div>
 		{% endif %}
@@ -28,7 +28,7 @@
 			<div class="col-md-2">
 				<a class="deco-none fas fa-edit float-right" data-toggle="tooltip" data-placement="top" title="Edit task" href="{{ url_for('edit_task', task_id=task.id) }}"></a>
 				<a class="deco-none fas fa-{% if task.complete %}check-square{% else %}square{% endif %} float-right" data-toggle="tooltip" data-placement="top" title="Task complete?" href="{{ url_for('change_task_completion', task_id=task.id) }}"></a>
-				<a class="deco-none fas fa-trash-alt float-right" data-toggle="tooltip" data-placement="top" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
+				<a class="deco-none fas fa-trash-alt float-right" data-toggle="tooltip" data-placement="top" title="Delete task" title="Delete task" href="{{ url_for('delete_task', task_id=task.id) }}"></a>
 			</div>
 		</div>
 	</div>

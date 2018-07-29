@@ -10,7 +10,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.urls import url_parse
 from wtforms import BooleanField, DateTimeField, PasswordField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Optional, ValidationError
-#from wtforms.fields.html5 import DateField
 from wtforms.fields import DateField
 
 import os
@@ -23,6 +22,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = 'False'
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
+app.config['WTF_CSRF_TIME_LIMIT'] = None
 app.debug = True
 app.config['DEBUG'] = True
 db = SQLAlchemy(app)
@@ -50,7 +50,7 @@ def tasks():
     tasks = current_user.tasks.order_by(Task.last_updated.desc()).all()
     form = TaskForm()
     if form.validate_on_submit():
-        task = Task(title=form.title.data, notes = form.notes.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user)
+        task = Task(title=form.title.data, notes = form.notes.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user, last_updated=datetime.utcnow())
         db.session.add(task)
         db.session.commit()
         flash('Task created.')
@@ -79,6 +79,16 @@ def edit_task(task_id):
         return redirect(url_for('tasks'))
     return render_template('tasks.html', tasks=tasks, task=task, form=form, action="Edit")
 
+@app.route('/delete_completed_tasks')
+def delete_completed_tasks():
+    tasks = current_user.tasks.all()
+    for task in tasks:
+        if task.complete:
+            db.session.delete(task)
+    db.session.commit()
+    flash('All completed tasks have been deleted.')
+    return redirect(request.referrer or url_for('tasks'))
+
 @app.route("/fitness", methods=['GET'])
 def fitness():
     return render_template('fitness.html')
@@ -105,6 +115,7 @@ def login():
             flash('Invalid username or password.')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
+        flash('Welcome back, {}!'.format(user.username))
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
@@ -128,6 +139,7 @@ def register():
 @app.route('/logout')
 def logout():
     logout_user()
+    flash('You have been logged out.')
     return redirect(url_for('index'))
 
 class LoginForm(FlaskForm):
@@ -168,6 +180,7 @@ def delete_task(task_id):
     if current_user == task.author:
         db.session.delete(task)
         db.session.commit()
+        flash('Task deleted.')
     return redirect(request.referrer or url_for('index'))
 
 @app.route('/change_task_completion/<int:task_id>')
@@ -176,8 +189,10 @@ def change_task_completion(task_id):
     if current_user == task.author:
         if task.complete:
             task.complete = False
+            flash('Task marked as incomplete.')
         else:
             task.complete = True
+            flash('Task marked as complete.')
         task.last_updated = datetime.now()
         db.session.commit()
     return redirect(request.referrer or url_for('index'))

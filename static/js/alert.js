@@ -1,5 +1,5 @@
 $(function() {
-    $('.page-alert').hide();
+    //$('.page-alert').hide();
     //Show alert
     $('button[data-toggle="page-alert"]').click(function(e) {
         e.preventDefault();
