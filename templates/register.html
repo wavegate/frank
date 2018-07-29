@@ -1,14 +1,42 @@
 {% extends "base.html" %}
 
+{% block head %}
+	{{ super() }}
+	<link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet"/>
+    <style>
+body {
+    background-image: url({{ url_for('static', filename='img/background.jpg') }});
+}
+</style>
+{% endblock %}
+
+<style>
+body {
+    background-image: url({{ url_for('static', filename='img/background.jpg') }});
+}
+</style>
+
 {% block app_content %}
-<div class="panel-group">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			Register
-		</div>
-		<div class="panel-body">
-			
-		</div>
-	</div>
-</div>
+<div class="card card-container">
+            <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
+            <img id="profile-img" class="profile-img-card" src="{{ url_for('static', filename='img/squire.svg.png')}}" />
+            <p id="profile-name" class="profile-name-card"></p>
+            <form class="form-signin" method="POST" action="/register">
+                <span id="reauth-email" class="reauth-email"></span>
+                {{ form.hidden_tag() }}
+                {{ form.username(class_="form-control", placeholder="Username")}}
+                {% for error in form.username.errors %}
+	            <span style="color: red;">[{{ error }}]</span>
+	            {% endfor %}
+                {{ form.password(class_="form-control", placeholder="Password")}}
+                {% for error in form.password.errors %}
+	            <span style="color: red;">[{{ error }}]</span>
+	            {% endfor %}
+                {{ form.password2(class_="form-control", placeholder="Confirm Password")}}
+                {% for error in form.password2.errors %}
+	            <span style="color: red;">[{{ error }}]</span>
+	            {% endfor %}
+                <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Register</button>
+            </form><!-- /form -->
+        </div><!-- /card-container -->
 {% endblock %}
