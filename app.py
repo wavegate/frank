@@ -47,7 +47,7 @@ def index():
 @app.route("/tasks", methods=['GET', 'POST'])
 @login_required
 def tasks():
-    tasks = current_user.tasks.filter(Task.stashed != True).order_by(Task.last_updated.desc()).all()
+    tasks = current_user.tasks.filter(Task.stashed != True or Task.stashed == None ).order_by(Task.last_updated.desc()).all()
     stashed_tasks = current_user.tasks.filter_by(stashed=True).order_by(Task.last_updated.desc()).all()
     form = TaskForm()
     if form.validate_on_submit():
