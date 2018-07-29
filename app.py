@@ -2,6 +2,7 @@ from flask import flash, Flask, render_template, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, LoginManager, login_required, login_user, logout_user, UserMixin
 from flask_migrate import Migrate
+from flask_moment import Moment
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
 from flask_moment import Moment
@@ -26,6 +27,7 @@ app.debug = True
 app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+moment = Moment(app)
 login = LoginManager(app)
 csrf = CSRFProtect(app)
 moment = Moment(app)
@@ -45,19 +47,35 @@ def index():
 @app.route("/tasks", methods=['GET', 'POST'])
 @login_required
 def tasks():
-	tasks = current_user.tasks.order_by(Task.last_updated.desc()).all()
-	form = TaskForm()
-	return render_template('tasks.html', tasks=tasks, form=form)
-
-@app.route("/create_task", methods=['POST'])
-@login_required
-def create_task():
+    tasks = current_user.tasks.order_by(Task.last_updated.desc()).all()
     form = TaskForm()
     if form.validate_on_submit():
         task = Task(title=form.title.data, notes = form.notes.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user)
         db.session.add(task)
         db.session.commit()
-    return redirect(request.referrer or url_for('tasks'))
+        return redirect(url_for('tasks'))
+    return render_template('tasks.html', tasks=tasks, form=form, action="Create")
+
+@app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
+def edit_task(task_id):
+    tasks = current_user.tasks.order_by(Task.last_updated.desc()).all()
+    task = Task.query.get(task_id)
+    form = TaskForm()
+    if form.validate_on_submit() and current_user == task.author:
+        if form.title.data:
+            task.title=form.title.data
+        if form.notes.data:
+            task.notes=form.notes.data
+        if form.deadline.data:
+            task.deadline=form.deadline.data
+        if form.start_time.data:
+            task.start_time=form.start_time.data
+        if form.end_time.data:
+            task.end_time=form.end_time.data
+        task.last_updated=datetime.utcnow()
+        db.session.commit()
+        return redirect(url_for('tasks'))
+    return render_template('tasks.html', tasks=tasks, task=task, form=form, action="Edit")
 
 @app.route("/fitness", methods=['GET'])
 def fitness():
@@ -150,29 +168,14 @@ def delete_task(task_id):
         db.session.commit()
     return redirect(request.referrer or url_for('index'))
 
-@app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
-def edit_task(task_id):
-    task = Task.query.get(task_id)
-    form = TaskForm()
-    if form.validate_on_submit() and current_user == task.author:
-        task.title=form.title.data
-        task.notes=form.notes.data
-        task.deadline=form.deadline.data
-        task.start_time=form.start_time.data
-        task.end_time=form.end_time.data
-        task.last_updated=datetime.now()
-        db.session.commit()
-        return redirect(url_for('tasks'))
-    return render_template('edit_task.html', task=task, form=form)
-
 @app.route('/change_task_completion/<int:task_id>')
 def change_task_completion(task_id):
     task = Task.query.get(task_id)
     if current_user == task.author:
         if task.complete:
-        	task.complete = False
+            task.complete = False
         else:
-        	task.complete = True
+            task.complete = True
         task.last_updated = datetime.now()
         db.session.commit()
     return redirect(request.referrer or url_for('index'))
