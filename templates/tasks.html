@@ -17,7 +17,7 @@
 							{{ form.title(class_="form-control") }}
 						</div>
 					</div>
-					<div class="form-group row">
+					<div class="form-group row collapse" id="collapseTaskForm">
 						{{ form.notes.label(class_="col-sm-2 col-form-label")}}
 						<div class="col-sm-4">
 							{{ form.notes(class_="form-control") }}
@@ -43,10 +43,11 @@
 							</div>
 						</div>
 					</div>
-					<div class="form-group row">
-						<div class="col-sm-10">
-				    	<input type="submit" class="btn btn-primary"></input>
-				    </div>
+					<div class="form-group row justify-content-center">
+						<div class="col-sm-2">
+					    	<input type="submit" class="btn btn-primary btn-block"></input>
+				    		<input class="btn btn-primary btn-link btn-block" data-toggle="collapse" data-target="#collapseTaskForm" value="Details"></input>
+				    	</div>
 				    </div>
 					</form>
 				</div>

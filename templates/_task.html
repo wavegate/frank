@@ -1,17 +1,17 @@
 <div class="card-header" id="heading{{task.id}}" data-toggle="collapse" data-target="#collapse{{ task.id }}" style="cursor: pointer" aria-expanded="true" aria-controls="collapse{{task.id}}">
 	<h5 class="mb-0">
-		{{ task.title }}
+		{{ task.title }} {% if task.complete %}(Complete){% endif %}
 	</h5>
 </div>
 <div id="collapse{{ task.id }}" class="collapse" aria-labelledby="heading{{task.id}}" data-parent="#accordion">
 	<div class="card-body">
 		<div class="row">
 			<div class="col-md-4">
-				Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
+				<!--Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
 				<br/>Last updated: {{ task.last_updated.strftime("%A, %B %d, %Y at %I:%M%p") }}
 				{% if task.deadline %}<br/>Deadline: {{ task.deadline.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}
 				{% if task.start_time %}<br/>Starts: {{ task.start_time.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}
-				{% if task.end_time %}<br/>Ends: {{ task.end_time.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}
+				{% if task.end_time %}<br/>Ends: {{ task.end_time.strftime("%A, %B %d, %Y at %I:%M%p") }}{% endif %}-->
 			</div>
 			<div class="col-md-6">
 				<div class="card card-body"><!-- why no work? -->
