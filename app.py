@@ -47,11 +47,11 @@ def index():
 @app.route("/tasks", methods=['GET', 'POST'])
 @login_required
 def tasks():
-    tasks = current_user.tasks.order_by(Task.last_updated.desc()).all()
+    tasks = current_user.tasks.filter_by(stashed=False).order_by(Task.last_updated.desc()).all()
     stashed_tasks = current_user.tasks.filter_by(stashed=True).order_by(Task.last_updated.desc()).all()
     form = TaskForm()
     if form.validate_on_submit():
-        task = Task(title=form.title.data, notes = form.notes.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user, last_updated=datetime.utcnow())
+        task = Task(title=form.title.data, notes = form.notes.data, location = form.location.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user, last_updated=datetime.utcnow())
         db.session.add(task)
         db.session.commit()
         flash('Task created.')
@@ -68,6 +68,8 @@ def edit_task(task_id):
             task.title=form.title.data
         if form.notes.data:
             task.notes=form.notes.data
+        if form.location.data:
+            task.location=form.location.data
         if form.deadline.data:
             task.deadline=form.deadline.data
         if form.start_time.data:
@@ -187,6 +189,7 @@ class RegistrationForm(FlaskForm):
 class TaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     notes = TextAreaField('Notes')
+    location = StringField('Location')
     deadline = DateTimeField('Deadline', format="%m/%d/%Y %I:%M %p", validators=[Optional()])
     start_time = DateTimeField('Start Time', format="%m/%d/%Y %I:%M %p", validators=[Optional()])
     end_time = DateTimeField('End Time', format="%m/%d/%Y %I:%M %p", validators=[Optional()])
@@ -251,12 +254,13 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
+    location = db.Column(db.String(140))
     isEvent = db.Column(db.Boolean, default=False)
     stashed = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Task {}>'.format(self.title)
-
+        
 @app.shell_context_processor
 def make_shell_context():
     return {'db': db, 'Task': Task, 'User': User}

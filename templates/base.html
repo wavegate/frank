@@ -17,16 +17,16 @@
 
 <body>
 	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<div class="page-alerts">
-			{% for message in messages %}
-		    <div class="alert alert-info page-alert" style="display:none">
-		        <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-		        <strong>Alert:</strong> {{ message }}
-		    </div>
-		    {% endfor %}
+	{% if messages %}
+	<div class="page-alerts">
+		{% for message in messages %}
+		<div class="alert alert-info page-alert" style="display:none">
+			<button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+			<strong>Alert:</strong> {{ message }}
 		</div>
-		{% endif %}
+		{% endfor %}
+	</div>
+	{% endif %}
 	{% endwith %}
 	<div id="wrapper" class="animate">
 		{% block navbar %}
@@ -35,30 +35,30 @@
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
 			aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarText">
-				<ul class="navbar-nav ml-md-auto d-md-flex">
-					{% if current_user.is_anonymous %}
-					<li class="nav-item">
-						<a class="nav-link" href="{{ url_for('login') }}">Login</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ url_for('register') }}">Register</a>
-					</li>
-					{% else %}
-					<li class="nav-item">
-						<a class="nav-link" href="{{ url_for('tasks') }}">Tasks</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ url_for('settings') }}">Settings</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-					</li>
-					{% endif %}
-				</ul>
-			</div>
-		</nav>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarText">
+			<ul class="navbar-nav ml-md-auto d-md-flex">
+				{% if current_user.is_anonymous %}
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('login') }}">Login</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('register') }}">Register</a>
+				</li>
+				{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('tasks') }}">Tasks</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('settings') }}">Settings</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+				</li>
+				{% endif %}
+			</ul>
+		</div>
+	</nav>
 	{% endblock %}
 
 	{% block content %}
@@ -66,53 +66,26 @@
 		{% block app_content %}{% endblock %}
 	</div>
 	{% endblock %}
+
+
 </div>
 </body>
 
 {% block scripts %}
-	<script
-	  src="https://code.jquery.com/jquery-3.3.1.min.js"
-	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-	  crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap-confirmation2@4.0.1/dist/bootstrap-confirmation.min.js"></script>
+<script
+src="https://code.jquery.com/jquery-3.3.1.min.js"
+integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-confirmation2@4.0.1/dist/bootstrap-confirmation.min.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
 
-	{{ moment.include_moment() }}
-	<script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.js')}}"></script>
-	<script src="{{ url_for('static', filename='js/login.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/alert.js') }}"></script>
-	<script>
-		$(function(){ 
-			$('form').attr('autocomplete','off');
-			$('[data-toggle="tooltip"]').tooltip();
-			$('.datepick').datetimepicker();
-			moment().format();
-			$('.page-alert').slideDown();
-			$('[data-confirm=confirmation]').confirmation({
-			  rootSelector: '[data-confirm=confirmation]',
-			  // other options
-});
-			});
-	</script>
-
-	<script>
-	// Using font-awesome 5 icons
-	  $.extend(true, $.fn.datetimepicker.defaults, {
-	    icons: {
-	      time: 'far fa-clock',
-	      date: 'far fa-calendar',
-	      up: 'fas fa-arrow-up',
-	      down: 'fas fa-arrow-down',
-	      previous: 'fas fa-chevron-left',
-	      next: 'fas fa-chevron-right',
-	      today: 'fas fa-calendar-check',
-	      clear: 'far fa-trash-alt',
-	      close: 'far fa-times-circle'
-	    }
-	  });
-	</script>
-	
+{{ moment.include_moment() }}
+<script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.js')}}"></script>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+<script src="{{ url_for('static', filename='js/alert.js') }}"></script>
+<script src="{{ url_for('static', filename='js/custom.js') }}"></script>
 </style>
 {% endblock %}
 </html>
