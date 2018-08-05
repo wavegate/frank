@@ -32,3 +32,16 @@ $.extend(true, $.fn.datetimepicker.defaults, {
 		close: 'far fa-times-circle'
 	}
 });
+
+$("#view_stashed").click(function() {
+	if ($(this).hasClass('fa-chevron-circle-down')) {
+		$(this).removeClass('fa-chevron-circle-down');
+		$(this).addClass('fa-chevron-circle-up');
+	} else {
+		$(this).removeClass('fa-chevron-circle-up');
+		$(this).addClass('fa-chevron-circle-down');
+	}
+	$('html, body').animate({
+		scrollTop: $("#scrollToLocation").offset().top
+	}, 1000);
+});

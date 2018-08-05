@@ -91,9 +91,9 @@
 	</div>
 </div>
 <div class="row" style="padding-top:40px;">
-	<div class="col">
+	<div class="col" id="scrollToLocation">
 		<div class="collapse" id="stashed_accordion">
-			<h4 class="text-center">Stash</h4>
+			<h4 class="text-center" id="stash">Stash</h4>
 			{% for task in stashed_tasks %}
 				{% include '_task.html' %}
 			{% endfor %}
@@ -101,6 +101,6 @@
 	</div>
 </div>
 
-<a class="fas fa-chevron-circle-down" data-toggle="collapse" data-target="#stashed_accordion" aria-controls="stashed_accordion" aria-expanded="false" aria-label="Toggle stashed" id="view_stashed"></a>
+<a class="fas fa-chevron-circle-down" data-toggle="collapse" data-target="#stashed_accordion" aria-controls="stashed_accordion" aria-expanded="false" aria-label="Toggle stashed" id="view_stashed""></a>
 <div class="col">
 {% endblock %}

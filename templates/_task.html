@@ -15,7 +15,7 @@
 				<!--Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
 					<br/>Last updated: {{ task.last_updated.strftime("%A, %B %d, %Y at %I:%M%p") }}-->
 					{% if task.location %}Location: {{ task.location }}{% endif %}
-					{% if task.deadline %}Deadline: {{ moment(task.deadline, local=True).format('MMMM Do YYYY, h:mm:ss a')}}{% endif %}
+					{% if task.deadline %}<br/>Deadline: {{ moment(task.deadline, local=True).format('MMMM Do YYYY, h:mm:ss a')}}{% endif %}
 					{% if task.start_time %}<br/>Starts: {{ moment(task.start_time, local=True).format('MMMM Do YYYY, h:mm:ss a') }}{% endif %}
 					{% if task.end_time %}<br/>Ends: {{ moment(task.end_time, local=True).format('MMMM Do YYYY, h:mm:ss a') }}{% endif %}
 				</div>

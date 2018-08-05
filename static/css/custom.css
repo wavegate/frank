@@ -25,7 +25,7 @@ body {
   text-align: center;
 }
 
-.fa-chevron-circle-down {
+.fa-chevron-circle-down, .fa-chevron-circle-up {
     cursor: pointer;
     position: fixed;
     bottom: 20px;
