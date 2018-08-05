@@ -43,5 +43,5 @@ $("#view_stashed").click(function() {
 	}
 	$('html, body').animate({
 		scrollTop: $("#scrollToLocation").offset().top
-	}, 1000);
+	}, 400);
 });
