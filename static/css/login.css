@@ -103,6 +103,16 @@ body, html {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
+.form-signin a {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    z-index: 1;
+    position: relative;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
 
 .form-signin .form-control:focus {
     border-color: rgb(104, 145, 162);
@@ -115,7 +125,7 @@ body, html {
     /*background-color: #4d90fe; */
     background-color: rgb(104, 145, 162);
     /* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
-    padding: 0px;
+    /* padding: 0px; */
     font-weight: 700;
     font-size: 14px;
     height: 36px;

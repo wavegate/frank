@@ -134,6 +134,10 @@ def schedule():
 def profile():
     return render_template('profile.html')
 
+@app.route("/slumusic", methods=['GET'])
+def slumusic():
+    return render_template('slumusic.html')
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
