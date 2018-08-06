@@ -64,6 +64,18 @@ def edit_task(task_id):
     stashed_tasks = current_user.tasks.filter_by(stashed=True).order_by(Task.timestamp.desc()).all()
     task = Task.query.get(task_id)
     form = TaskForm()
+    if task.notes:
+        form.notes.data = task.notes
+    if task.title:
+        form.title.data = task.title
+    if task.location:
+        form.location.data = task.location
+    if task.deadline:
+        form.deadline.data = task.deadline
+    if task.start_time:
+        form.start_time.data = task.start_time
+    if task.end_time:
+        form.end_time.data =task.end_time
     if form.validate_on_submit() and current_user == task.author:
         if form.title.data:
             task.title=form.title.data
