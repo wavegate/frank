@@ -9,7 +9,7 @@ from flask_moment import Moment
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.urls import url_parse
 from wtforms import BooleanField, DateTimeField, PasswordField, StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, Optional, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, Optional, ValidationError, Length
 from wtforms.fields import DateField
 
 import os
@@ -187,7 +187,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Please use a different email address.')
 
 class TaskForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired(), Length(max=140)])
     notes = TextAreaField('Notes')
     location = StringField('Location')
     deadline = DateTimeField('Deadline', format="%m/%d/%Y %I:%M %p", validators=[Optional()])

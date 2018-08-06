@@ -18,6 +18,9 @@
 						<div class="form-group row">
 							{{ form.title.label(class_="col-sm-2 col-form-label")}}
 							<div class="col-sm-10">
+								{% for error in form.title.errors %}
+								<span style="color: red;">[{{ error }}]</span>
+								{% endfor %}
 								{% if action == 'Edit' and task.title %}
 								{{ form.title(class_="form-control", value=task.title) }}
 								{% else %}
@@ -85,7 +88,7 @@
 	<div class="col">
 		<div id="accordion">
 			{% for task in tasks %}
-				{% include '_task.html' %}
+			{% include '_task.html' %}
 			{% endfor %}
 		</div>
 	</div>
@@ -95,7 +98,7 @@
 		<div class="collapse" id="stashed_accordion">
 			<h4 class="text-center" id="stash">Stash</h4>
 			{% for task in stashed_tasks %}
-				{% include '_task.html' %}
+			{% include '_task.html' %}
 			{% endfor %}
 		</div>
 	</div>
@@ -103,4 +106,4 @@
 
 <a class="fas fa-chevron-circle-down" data-toggle="collapse" data-target="#stashed_accordion" aria-controls="stashed_accordion" aria-expanded="false" aria-label="Toggle stashed" id="view_stashed""></a>
 <div class="col">
-{% endblock %}
+	{% endblock %}

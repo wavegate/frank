@@ -13,10 +13,6 @@ $(function(){
 	$('.datepick').datetimepicker();
 	moment().format();
 	$('.page-alert').slideDown();
-	$('[data-confirm=confirmation]').confirmation({
-		rootSelector: '[data-confirm=confirmation]',
-			  // other options
-			});
 });
 
 $.extend(true, $.fn.datetimepicker.defaults, {
