@@ -47,8 +47,8 @@ def index():
 @app.route("/tasks", methods=['GET', 'POST'])
 @login_required
 def tasks():
-    tasks = current_user.tasks.filter_by(stashed=False).order_by(Task.last_updated.desc()).all()
-    stashed_tasks = current_user.tasks.filter_by(stashed=True).order_by(Task.last_updated.desc()).all()
+    tasks = current_user.tasks.filter_by(stashed=False).order_by(Task.timestamp.desc()).all()
+    stashed_tasks = current_user.tasks.filter_by(stashed=True).order_by(Task.timestamp.desc()).all()
     form = TaskForm()
     if form.validate_on_submit():
         task = Task(title=form.title.data, notes = form.notes.data, location = form.location.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user, last_updated=datetime.utcnow())
@@ -60,7 +60,8 @@ def tasks():
 
 @app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
 def edit_task(task_id):
-    tasks = current_user.tasks.order_by(Task.last_updated.desc()).all()
+    tasks = current_user.tasks.filter_by(stashed=False).order_by(Task.timestamp.desc()).all()
+    stashed_tasks = current_user.tasks.filter_by(stashed=True).order_by(Task.timestamp.desc()).all()
     task = Task.query.get(task_id)
     form = TaskForm()
     if form.validate_on_submit() and current_user == task.author:
@@ -80,7 +81,7 @@ def edit_task(task_id):
         db.session.commit()
         flash('Task updated.')
         return redirect(url_for('tasks'))
-    return render_template('tasks.html', tasks=tasks, task=task, form=form, action="Edit")
+    return render_template('tasks.html', tasks=tasks, task=task, stashed_tasks=stashed_tasks, form=form, action="Edit")
 
 @app.route('/delete_completed_tasks')
 def delete_completed_tasks():
@@ -90,6 +91,15 @@ def delete_completed_tasks():
             db.session.delete(task)
     db.session.commit()
     flash('All completed tasks have been deleted.')
+    return redirect(request.referrer or url_for('tasks'))
+
+@app.route('/delete_all_tasks')
+def delete_all_tasks():
+    tasks = current_user.tasks.all()
+    for task in tasks:
+        db.session.delete(task)
+    db.session.commit()
+    flash('All tasks have been deleted.')
     return redirect(request.referrer or url_for('tasks'))
 
 @app.route('/stash_task/<int:task_id>')
