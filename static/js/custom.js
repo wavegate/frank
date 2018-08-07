@@ -56,10 +56,10 @@ $("#view_stashed").click(function() {
 		.change( function () {
 			var filter = $(this).val();
 			if(filter) {
-				$(list).find("#checker:not(:Contains(" + filter + "))").parent().slideUp();
-				$(list).find("#checker:Contains(" + filter + ")").parent().slideDown();
+				$(list).find("#checker:not(:Contains(" + filter + "))").slideUp();
+				$(list).find("#checker:Contains(" + filter + ")").slideDown();
 			} else {
-				$(list).find("#checker").parent().slideDown();
+				$(list).find("#checker").slideDown();
 			}
 			return false;
 		}
@@ -69,6 +69,6 @@ $("#view_stashed").click(function() {
 	}
 	
 	$(function () {
-		listFilter($("#header"), $("#accordion"));
+		listFilter($("#header"), $(".searchable"));
 	});
 }(jQuery));
