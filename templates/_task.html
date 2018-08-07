@@ -1,17 +1,18 @@
-<div class="card-header{% if task.complete %} bg-success text-white{% elif current_user.current_task_id == task.id %} bg-primary text-white{% endif %}" id="heading{{task.id}}" data-toggle="collapse" data-target="#collapse{{ task.id }}" style="cursor: pointer" aria-expanded="true" aria-controls="collapse{{task.id}}">
-	<h5 class="mb-0">
-		{{ task.title }}
-		{% if task.deadline %}
-		<div class="float-sm-right">
-			Due {{ moment(task.deadline, local=True).fromNow()}}
-		</div>
-		{% endif %}
-	</h5>
-</div>
-<div id="collapse{{ task.id }}" class="collapse" aria-labelledby="heading{{task.id}}" data-parent="#accordion">
-	<div class="card-body">
-		<div class="row">
-			<div class="col-md-3">
+<div id="checker">
+	<div class="card-header{% if task.complete %} bg-success text-white{% elif current_user.current_task_id == task.id %} bg-primary text-white{% endif %}" id="heading{{task.id}}" data-toggle="collapse" data-target="#collapse{{ task.id }}" style="cursor: pointer" aria-expanded="true" aria-controls="collapse{{task.id}}">
+		<h5 class="mb-0">
+			{{ task.title }}
+			{% if task.deadline %}
+			<div class="float-sm-right">
+				Due {{ moment(task.deadline, local=True).fromNow()}}
+			</div>
+			{% endif %}
+		</h5>
+	</div>
+	<div id="collapse{{ task.id }}" class="collapse" aria-labelledby="heading{{task.id}}" data-parent="#accordion">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-3">
 				<!--Time created: {{ task.timestamp.strftime("%A, %B %d, %Y at %I:%M%p") }} 
 					<br/>Last updated: {{ task.last_updated.strftime("%A, %B %d, %Y at %I:%M%p") }}-->
 					{% if task.location %}Location: {{ task.location }}{% endif %}
@@ -47,3 +48,4 @@
 			</div>
 		</div>
 	</div>
+</div>

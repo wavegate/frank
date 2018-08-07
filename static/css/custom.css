@@ -1,6 +1,7 @@
 body {
 	padding-top: 55px; 
 	word-wrap:break-word;
+  padding-bottom:55px;
 }
 
 .logo {
@@ -27,9 +28,6 @@ body {
 
 .fa-chevron-circle-down, .fa-chevron-circle-up {
     cursor: pointer;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
     font-size: 35px;
 }
 

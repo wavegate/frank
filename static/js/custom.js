@@ -33,11 +33,42 @@ $("#view_stashed").click(function() {
 	if ($(this).hasClass('fa-chevron-circle-down')) {
 		$(this).removeClass('fa-chevron-circle-down');
 		$(this).addClass('fa-chevron-circle-up');
+		$('html, body').animate({
+			scrollTop: $("#scrollToLocation").offset().top
+		}, 400);
 	} else {
 		$(this).removeClass('fa-chevron-circle-up');
 		$(this).addClass('fa-chevron-circle-down');
+		$('html, body').animate({
+			scrollTop: 0
+		}, 400);
 	}
-	$('html, body').animate({
-		scrollTop: $("#scrollToLocation").offset().top
-	}, 400);
 });
+
+(function ($) {
+	jQuery.expr[':'].Contains = function(a,i,m){
+		return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
+	};
+
+	function listFilter(header, list) {
+		input = $(".filterinput");
+		$(input)
+		.change( function () {
+			var filter = $(this).val();
+			if(filter) {
+				$(list).find("#checker:not(:Contains(" + filter + "))").parent().slideUp();
+				$(list).find("#checker:Contains(" + filter + ")").parent().slideDown();
+			} else {
+				$(list).find("#checker").parent().slideDown();
+			}
+			return false;
+		}
+)		.keyup( function () {
+			$(this).change();
+		});
+	}
+	
+	$(function () {
+		listFilter($("#header"), $("#accordion"));
+	});
+}(jQuery));
