@@ -59,7 +59,8 @@ $("#view_stashed").click(function() {
 				$(list).find("#checker:not(:Contains(" + filter + "))").slideUp();
 				$(list).find("#checker:Contains(" + filter + ")").slideDown();
 			} else {
-				$(list).find("#checker").slideDown();
+				$(list).find("#checker:not(:Contains(" + filter + "))").slideDown();
+				$(list).find("#checker:Contains(" + filter + ")").slideDown();
 			}
 			return false;
 		}

@@ -59,9 +59,8 @@
 				</ul>
 			</div>
 		</nav>
-		<nav class="navbar header-top fixed-bottom navbar-expand-lg navbar-dark bg-dark ">
-			{% block bottom_nav %}{% endblock %}
-		</nav>
+		{% block bottom_nav %}
+		{% endblock %}
 	{% endblock %}
 
 	{% block content %}
