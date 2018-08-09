@@ -59,6 +59,18 @@ def tasks():
         return redirect(url_for('tasks'))
     return render_template('tasks.html', now=now, tasks=tasks, stashed_tasks=stashed_tasks, form=form, action="Create")
 
+@app.route("/new_task", methods=['GET', 'POST'])
+@login_required
+def new_task():
+    form = TaskForm()
+    if form.validate_on_submit():
+        task = Task(title=form.title.data, notes = form.notes.data, location = form.location.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user, last_updated=datetime.utcnow())
+        db.session.add(task)
+        db.session.commit()
+        flash('Task created.')
+        return redirect(url_for('tasks'))
+    return render_template('new_task.html', form=form)
+
 @app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
 def edit_task(task_id):
     tasks = current_user.tasks.filter_by(stashed=False).order_by(Task.timestamp.desc()).all()
@@ -96,7 +108,7 @@ def edit_task(task_id):
         db.session.commit()
         flash('Task updated.')
         return redirect(url_for('tasks'))
-    return render_template('tasks.html', now=now, tasks=tasks, task=task, stashed_tasks=stashed_tasks, form=form, action="Edit")
+    return render_template('edit_task.html', task=task, form=form)
 
 @app.route('/delete_completed_tasks')
 def delete_completed_tasks():

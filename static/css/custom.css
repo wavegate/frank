@@ -14,6 +14,8 @@ body {
 }
 
 .container-fluid {
+  padding-left:0px;
+  padding-right:0px;
   overflow: hidden;
   text-overflow: clip; // The default, it just disappears
   text-overflow: ellipsis; // Or, you can make an ellipsis (...) appear where the text is cut off
@@ -26,7 +28,12 @@ body {
   text-align: center;
 }
 
-.fa-chevron-circle-down, .fa-chevron-circle-up {
+#bottomnav > li{
+  margin-left:0px;
+  margin-right:30px;
+}
+
+.fa-plus, .fa-chevron-circle-down, .fa-chevron-circle-up {
     cursor: pointer;
     font-size: 35px;
 }

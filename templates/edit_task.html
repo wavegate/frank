@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class="card">
+	<div class="card-body">
+	<form method="POST">
+		{{ form.hidden_tag() }}
+		<div class="form-group row">
+			{{ form.title.label(class_="col-sm-2 col-form-label")}}
+			<div class="col-sm-10">
+				{% for error in form.title.errors %}
+				<span style="color: red;">[{{ error }}]</span>
+				{% endfor %}
+				{{ form.title(class_="form-control") }}
+			</div>
+		</div>
+		<div class="form-group row collapse show" id="collapseTaskForm">
+			<div class="col-sm-6">
+				<div class="form-group row">
+					{{ form.location.label(class_="col-sm-2 col-form-label")}}
+					<div class="col-sm-10">						
+						{{ form.location(class_="form-control") }}
+					</div>
+				</div>
+				<div class="form-group row">
+					{{ form.notes.label(class_="col-sm-2 col-form-label")}}
+					<div class="col-sm-10">
+						{{ form.notes(id="editor") }}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group row">
+					{{ form.deadline.label(class_="col-sm-2 col-form-label")}}
+					<div class="col-sm-10">
+						{{ form.deadline(class_="form-control datepick") }}
+					</div>
+				</div>
+				<div class="form-group row">
+					{{ form.start_time.label(class_="col-sm-2 col-form-label")}}
+					<div class="col-sm-10">
+						{{ form.start_time(class_="form-control datepick") }}
+					</div>
+				</div>
+				<div class="form-group row">
+					{{ form.end_time.label(class_="col-sm-2 col-form-label")}}
+					<div class="col-sm-10">
+						{{ form.end_time(class_="form-control datepick") }}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group row justify-content-center">
+			<div class="col-sm-2">
+				<input class="btn btn-link btn-block" data-toggle="collapse" data-target="#collapseTaskForm" value="Details"></input>
+				<input type="submit" class="btn btn-primary btn-block"></input>
+			</div>
+		</div>
+	</form>
+	<a class="btn btn-link btn-block" href="{{ url_for('tasks') }}">Cancel</a>
+</div>
+</div>
+{% endblock %}
