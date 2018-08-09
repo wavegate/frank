@@ -63,6 +63,7 @@ def tasks():
 def edit_task(task_id):
     tasks = current_user.tasks.filter_by(stashed=False).order_by(Task.timestamp.desc()).all()
     stashed_tasks = current_user.tasks.filter_by(stashed=True).order_by(Task.timestamp.desc()).all()
+    now = datetime.now()
     task = Task.query.get(task_id)
     form = TaskForm()
     if request.method == 'GET':
@@ -95,7 +96,7 @@ def edit_task(task_id):
         db.session.commit()
         flash('Task updated.')
         return redirect(url_for('tasks'))
-    return render_template('tasks.html', tasks=tasks, task=task, stashed_tasks=stashed_tasks, form=form, action="Edit")
+    return render_template('tasks.html', now=now, tasks=tasks, task=task, stashed_tasks=stashed_tasks, form=form, action="Edit")
 
 @app.route('/delete_completed_tasks')
 def delete_completed_tasks():
