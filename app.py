@@ -49,6 +49,7 @@ def index():
 def tasks():
     tasks = current_user.tasks.filter_by(stashed=False).order_by(Task.timestamp.desc()).all()
     stashed_tasks = current_user.tasks.filter_by(stashed=True).order_by(Task.timestamp.desc()).all()
+    now = datetime.now()
     form = TaskForm()
     if form.validate_on_submit():
         task = Task(title=form.title.data, notes = form.notes.data, location = form.location.data, deadline=form.deadline.data, start_time=form.start_time.data, end_time=form.end_time.data, author=current_user, last_updated=datetime.utcnow())
@@ -56,7 +57,7 @@ def tasks():
         db.session.commit()
         flash('Task created.')
         return redirect(url_for('tasks'))
-    return render_template('tasks.html', tasks=tasks, stashed_tasks=stashed_tasks, form=form, action="Create")
+    return render_template('tasks.html', now=now, tasks=tasks, stashed_tasks=stashed_tasks, form=form, action="Create")
 
 @app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
 def edit_task(task_id):

@@ -1,5 +1,7 @@
 <div id="checker">
-	<div class="card-header{% if task.complete %} bg-success text-white{% elif current_user.current_task_id == task.id %} bg-primary text-white{% endif %}" id="heading{{task.id}}" data-toggle="collapse" data-target="#collapse{{ task.id }}" style="cursor: pointer" aria-expanded="true" aria-controls="collapse{{task.id}}">
+	<div class="card-header{% if task.complete %} bg-success text-white
+	{% elif task.deadline %}{% if task.deadline < now %} bg-danger text-white{% endif %}
+	{% elif current_user.current_task_id == task.id %} bg-primary text-white{% endif %}" id="heading{{task.id}}" data-toggle="collapse" data-target="#collapse{{ task.id }}" style="cursor: pointer" aria-expanded="true" aria-controls="collapse{{task.id}}">
 		<h5 class="mb-0">
 			{{ task.title }}
 			{% if task.deadline %}
