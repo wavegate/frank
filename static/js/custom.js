@@ -51,7 +51,7 @@ $("#view_stashed").click(function() {
 	};
 
 	function listFilter(header, list) {
-		input = $(".filterinput");
+		input = $("#filterinput");
 		$(input)
 		.change( function () {
 			var filter = $(this).val();

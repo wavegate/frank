@@ -3,6 +3,7 @@
 .navbar-expand-lg .navbar-nav.side-nav{flex-direction: column;}
 .card{margin-bottom: 15px; border-radius:0; box-shadow: 0 3px 5px rgba(0,0,0,.1); }
 .header-top{box-shadow: 0 3px 5px rgba(0,0,0,.1)}
+.header-bottom{box-shadow: 0 -3px 5px rgba(0,0,0,.1)}
 .leftmenutrigger{display: none}
 @media(min-width:992px) {
 	.leftmenutrigger{display: block;display: block;margin: 7px 20px 4px 0;cursor: pointer;}

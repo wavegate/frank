@@ -98,11 +98,9 @@
 {% endblock %}
 
 {% block bottom_nav %}
-<nav class="navbar header-top fixed-bottom navbar-expand-lg navbar-dark bg-dark ">
-	<form class="filterform" action="#">
-		<input class="filterinput form-control" type="text"/ placeholder="Search tasks...">
-	</form>
-	<ul class="navbar-nav ml-md-auto d-md-flex">
+<nav class="navbar header-bottom fixed-bottom navbar-expand-lg navbar-dark bg-dark ">
+	<input id="filterinput" class="filterform form-control w-50" type="text"/ placeholder="Search tasks...">
+	<ul class="navbar-nav ml-auto">
 		<li class="nav-item">
 			<a class="fas fa-chevron-circle-down" style="color:white;" data-toggle="collapse" data-target="#stashed_accordion" aria-controls="stashed_accordion" aria-expanded="false" aria-label="Toggle stashed" id="view_stashed""></a>
 		</li>
