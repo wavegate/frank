@@ -30,7 +30,7 @@
 	{% endwith %}
 	<div id="wrapper" class="animate">
 		{% block navbar %}
-		<nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-dark ">
+		<nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-dark " id="top-nav">
 			<a class="navbar-brand" href="{{ url_for('index') }}">{% if current_user.is_anonymous %}<img class="logo" src="{{ url_for('static', filename='img/logo_invert.png')}}"/>{% else %}Welcome, {{ current_user.username }}!{% endif %}</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
 			aria-expanded="false" aria-label="Toggle navigation">

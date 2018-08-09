@@ -64,7 +64,7 @@ $("#view_stashed").click(function() {
 			}
 			return false;
 		}
-)		.keyup( function () {
+		)		.keyup( function () {
 			$(this).change();
 		});
 	}
@@ -73,3 +73,14 @@ $("#view_stashed").click(function() {
 		listFilter($("#header"), $(".searchable"));
 	});
 }(jQuery));
+
+$(document).click(function (event) {
+	if ($(event.target).closest('#top-nav').length == 0) {
+		var clickover = $(event.target);
+		var $navbar = $("#navbarText");               
+		var _opened = $navbar.hasClass("show");
+		if (_opened === true) {      
+			$navbar.collapse('hide');
+		}
+	}
+});
