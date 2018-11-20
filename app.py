@@ -44,6 +44,10 @@ def index():
     else:
         return redirect(url_for('login'))
 
+@app.route("/progress", methods= ['GET'])
+def progress():
+    return render_template('progress.html')
+
 @app.route("/health", methods = ['GET'])
 @login_required
 def health():

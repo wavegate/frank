@@ -1,0 +1,93 @@
+Metadata-Version: 2.1
+Name: pyexcel-xlsxwx
+Version: 0.1.7
+Summary: Save pyexcel data with XlsxWriter, while retaining good formatting.
+Home-page: https://github.com/patarapolw/pyexcel-xlsxwx
+License: MIT
+Keywords: pyexcel,excel,xlsxwriter
+Author: Pacharapol Withayasakpunt
+Author-email: patarapolw@gmail.com
+Requires-Python: >=3.5
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Requires-Dist: importlib_resources (>=1.0,<2.0)
+Requires-Dist: ruamel.yaml (>=0.15.50,<0.16.0)
+Requires-Dist: xlsxwriter (>=1.0,<2.0)
+Description-Content-Type: text/markdown
+
+# pyexcel-xlsxwx
+
+[![Build Status](https://travis-ci.org/patarapolw/pyexcel-xlsxwx.svg?branch=master)](https://travis-ci.org/patarapolw/pyexcel-xlsxwx)
+[![PyPI version shields.io](https://img.shields.io/pypi/v/pyexcel_xlsxwx.svg)](https://pypi.python.org/pypi/pyexcel_xlsxwx/)
+[![PyPI license](https://img.shields.io/pypi/l/pyexcel_xlsxwx.svg)](https://pypi.python.org/pypi/pyexcel_xlsxwx/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/pyexcel_xlsxwx.svg)](https://pypi.python.org/pypi/pyexcel_xlsxwx/)
+
+Save pyexcel data with XlsxWriter, while retaining good formatting.
+
+## Features
+
+- Allow setting column widths and word wrap.
+- A package for reading data is not included, please see [`pyexcel`'s plugins here](https://github.com/pyexcel/pyexcel#available-plugins).
+
+## Installation
+
+```commandline
+$ pip install pyexcel-xlsxwx
+```
+Note that `pyexcel` is not a dependency.
+
+## Usage
+
+```python
+>>> import pyexcel_xlsxwx
+>>> data = OrderedDict() # from collections import OrderedDict
+>>> data.update({"Sheet 1": [[1, 2, 3], [4, 5, 6]]})
+>>> data.update({"Sheet 2": [["row 1", "row 2", "row 3"]]})
+>>> pyexcel_xlsxwx.save_data("your_file.xlsx", data)
+```
+
+You can also define a custom config via:
+```python
+>>> pyexcel_xlsxwx.save_data("your_file.xlsx", data, config=config)
+```
+Where config can be dictionary or path to YAML file.
+
+The default YAML config is:
+
+```yaml
+workbook:
+  constant_memory: true
+  strings_to_numbers: false
+  strings_to_formulas: false
+  strings_to_urls: true
+worksheet:
+  _default:
+    freeze_panes: A2
+#    column_width: 30
+    smart_fit: true
+    max_column_width: 30
+format:
+  _default:
+    valign: top
+    text_wrap: true
+```
+`column_width` can also accept a list and a dictionary where key indicates the column.
+
+`row_height` can also be set the same way.
+
+To cancel out `freeze_panes`, try:
+
+```python
+>>> pyexcel_xlsxwx.save_data("your_file.xlsx", data, config={'worksheet': {'_default': {'freeze_panes': None}}})
+```
+
+The settings will merge (thanks to https://stackoverflow.com/questions/20656135/python-deep-merge-dictionary-data), so that the other formattings won't be lost.
+
+## Related projects
+
+- [pyexcel-openpyxlx](https://github.com/patarapolw/pyexcel-openpyxlx) - export the styles for XlsxWriter.
+- [pyexcel-export](https://github.com/patarapolw/pyexcel-export) - operates using OpenPyXL, which seeming has bad word wrap support. However, the formatting can be well preserved.
+
