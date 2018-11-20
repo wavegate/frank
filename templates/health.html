@@ -47,11 +47,13 @@
 
 {% for weight in weights %}
 
-<p>{{ weight.value }} | <a href="{{ url_for('delete_weight', weight_id=weight.id) }}">Delete weight</a></p> 
+<p>{{ weight.value }} | {{ weight.timestamp }} | <a href="{{ url_for('delete_weight', weight_id=weight.id) }}">Delete weight</a></p> 
 
 {% endfor %}
 
 <p><a href="{{ url_for('add_weight') }}">Add weight</a></p>
+
+<p>Total weight change: {{ weightChange }}</p>
 
 {% endblock %}
 

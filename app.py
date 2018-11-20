@@ -50,7 +50,11 @@ def health():
     weights = current_user.weights.all()
     labels = (weight.timestamp for weight in weights)
     values = (weight.value for weight in weights)
-    return render_template('health.html', weights=weights, labels=labels, values=list(values))
+    values = list(values)
+    print('Hello world!', file=sys.stderr)
+    weightChange = (max(values) if values else 0) - (min(values) if values else 0)
+
+    return render_template('health.html', weights=weights, labels=labels, values=values, weightChange=weightChange)
 
 @app.route("/add_weight", methods=['GET', 'POST'])
 @login_required
