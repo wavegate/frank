@@ -48,7 +48,9 @@ def index():
 @login_required
 def health():
     weights = current_user.weights.all()
-    return render_template('health.html', weights=weights)
+    labels = (weight.timestamp for weight in weights)
+    values = (weight.value for weight in weights)
+    return render_template('health.html', weights=weights, labels=labels, values=list(values))
 
 @app.route("/add_weight", methods=['GET', 'POST'])
 @login_required
