@@ -44,6 +44,33 @@ def index():
     else:
         return redirect(url_for('login'))
 
+@app.route("/health", methods = ['GET'])
+@login_required
+def health():
+    weights = current_user.weights.all()
+    return render_template('health.html', weights=weights)
+
+@app.route("/add_weight", methods=['GET', 'POST'])
+@login_required
+def add_weight():
+    form = WeightForm()
+    if form.validate_on_submit():
+        weight = Weight(value = form.value.data, author=current_user)
+        db.session.add(weight)
+        db.session.commit()
+        flash('Weight added.')
+        return redirect(url_for('health'))
+    return render_template('add_weight.html', form=form)
+
+@app.route('/delete_weight/<int:weight_id>')
+def delete_weight(weight_id):
+    weight = Weight.query.get(weight_id)
+    if current_user == weight.author:
+        db.session.delete(weight)
+        db.session.commit()
+        flash('Weight deleted.')
+    return redirect(request.referrer or url_for('health'))
+
 @app.route("/tasks", methods=['GET', 'POST'])
 @login_required
 def tasks():
@@ -236,6 +263,10 @@ class TaskForm(FlaskForm):
     end_time = DateTimeField('End Time', format="%m/%d/%Y %I:%M %p", validators=[Optional()])
     submit = SubmitField('Submit')
 
+class WeightForm(FlaskForm):
+    value = StringField('Value', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
 @app.route('/delete_task/<int:task_id>')
 def delete_task(task_id):
     task = Task.query.get(task_id)
@@ -276,6 +307,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     tasks = db.relationship('Task', backref='author', lazy='dynamic')
+    weights = db.relationship('Weight', backref='author', lazy='dynamic')
     current_task_id = db.Column(db.Integer)
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -301,6 +333,15 @@ class Task(db.Model):
 
     def __repr__(self):
         return '<Task {}>'.format(self.title)
+
+class Weight(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    value = db.Column(db.Integer)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<Weight {}>'.format(self.value)
         
 @app.shell_context_processor
 def make_shell_context():
