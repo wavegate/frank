@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+Cognition
+
+<a href="{{url_for('test1')}}">test</a>
+
+{% for test in tests %}
+        <br>{{ test.testname }} | {{ test.score }}% | {{ test.reaction_time }} ms | <a href="{{ url_for('delete_test', test_id=test.id) }}">Remove score</a>
+    {% endfor %}
+
+{% endblock %}
+

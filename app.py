@@ -81,6 +81,52 @@ def delete_weight(weight_id):
         flash('Weight deleted.')
     return redirect(request.referrer or url_for('health'))
 
+@app.route("/cognition", methods = ['GET'])
+@login_required
+def cognition():
+    tests = current_user.tests.order_by(Test.timestamp.desc()).all()
+    return render_template('cognition.html', tests=tests)
+
+@app.route("/test1", methods = ['GET'])
+@login_required
+def test1():
+    return render_template('test1.html')
+
+@app.route('/postmethod', methods = ['POST'])
+@csrf.exempt
+def get_post_javascript_data():
+    test_name = request.form['test_name']
+    accuracy = request.form['accuracy']
+    score = accuracy
+    rt = request.form['rt']
+    #print(jsdata, file=sys.stderr)
+    #with open('somefile.txt', 'a') as the_file:
+    #    the_file.write(jsdata)
+    #files = glob.glob(os.path.join(app.instance_path, 'static/img/subitizing/*')) #remove subitizing images, must change once more tests added
+    #for f in files:
+    #    os.remove(f)
+    test = Test(testname=test_name, score=score, reaction_time=rt, accuracy=accuracy, author=current_user)
+    db.session.add(test)
+    db.session.commit()
+    return rt
+
+@app.route('/delete_test/<int:test_id>')
+@login_required
+def delete_test(test_id):
+    test = Test.query.get(test_id)
+    if test.author == current_user:
+        db.session.delete(test)
+        db.session.commit()
+    return redirect(request.referrer or url_for('cognition'))
+
+@app.route('/tester', methods=['GET', 'POST'])
+@csrf.exempt
+def tester():
+    clicked=None
+    if request.method == "POST":
+        clicked=request.form['data']
+    return render_template('tester.html')
+
 @app.route("/tasks", methods=['GET', 'POST'])
 @login_required
 def tasks():
@@ -318,6 +364,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     tasks = db.relationship('Task', backref='author', lazy='dynamic')
     weights = db.relationship('Weight', backref='author', lazy='dynamic')
+    tests = db.relationship('Test', backref='author', lazy='dynamic')
     current_task_id = db.Column(db.Integer)
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -352,6 +399,20 @@ class Weight(db.Model):
 
     def __repr__(self):
         return '<Weight {}>'.format(self.value)
+
+class Test(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    testname = db.Column(db.String(140))
+    score = db.Column(db.String(140))
+    accuracy = db.Column(db.String(140))
+    reaction_time = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    language = db.Column(db.String(5))
+
+    def __repr__(self):
+        return '<Test {}: {}>'.format(self.testname, self.score)
+
         
 @app.shell_context_processor
 def make_shell_context():
