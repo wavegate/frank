@@ -6,7 +6,6 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_wtf.csrf import CSRFProtect
 from flask_moment import Moment
-from werkzeug.security import generate_password_hash, check_password_hash
 
 import os
 from datetime import datetime
@@ -22,5 +21,8 @@ login = LoginManager(app)
 csrf = CSRFProtect(app)
 moment = Moment(app)
 login.login_view = 'login'
+
+from app.auth import bp as auth_bp
+app.register_blueprint(auth_bp, url_prefix='/auth')
 
 from app import routes, models
