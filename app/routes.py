@@ -1,7 +1,7 @@
 from flask import flash, render_template, redirect, request, url_for
 from flask_login import current_user, LoginManager, login_required, login_user, logout_user, UserMixin
 from app import app, db, csrf
-from app.forms import LoginForm, RegistrationForm, TaskForm, WeightForm
+from app.auth.forms import LoginForm, RegistrationForm, TaskForm, WeightForm
 from app.models import User, Task, Weight, Test
 from werkzeug.urls import url_parse
 from datetime import datetime
